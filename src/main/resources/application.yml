@@ -1,0 +1,50 @@
+spring:
+  cloud:
+    config:
+      enabled: false
+    gateway:
+      x-forwarded:
+        for-enabled: false
+      httpclient:
+        ssl:
+          useInsecureTrustManager: true
+        connect-timeout: 10000
+        response-timeout: 3000
+      routes:
+        - id: bbs-api
+          uri: http://localhost:8080
+          predicates:
+            - Path=/api/bbs/*
+          metadata:
+            response-timeout: 60000
+        - id: nextJS
+          uri: http://localhost:3000
+          predicates:
+            - Method=GET
+            - Path=/**
+          filters:
+            - RewriteLocationResponseHeader=AS_IN_REQUEST, Location
+  webflux:
+    cors:
+      allowed-origins: http://localhost:8081
+      allowed-methods: POST
+      allowed-headers:
+        - x-requested-with
+        - Authorization
+        - Content-Type
+        - Credentials
+        - X-AUTH-TOKEN
+        - X-CSRF-TOKEN
+      max-age: 3600          
+
+management:
+  endpoint:
+    gateway:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: gateway
+
+server:
+  port: 8081
