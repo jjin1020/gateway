@@ -14,7 +14,7 @@ spring:
         - id: bbs-api
           uri: http://localhost:8080
           predicates:
-            - Path=/api/bbs/*
+            - Path=/api/bbs/**
           metadata:
             response-timeout: 60000
         - id: nextJS
